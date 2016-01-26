@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0,minimal-ui"/>
+<title>jskey_pape</title>
+<script type="text/javascript" src="./jskey/jskey_page.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+var fn = function(e){$jskey.$('show').innerHTML="page=" + e.page + ",pagesize=" + e.pagesize + ",size=" + e.size + ",lastpage=" + e.totalpage;}
+</script>
+点击结果：<span id="show"></span><br />
+<br /><br />使用template可以设置自己的展示模板，如果template直接设置值:1-4可使用默认的四种模板
+<br /><br />下面是比较全面的演示及说明，相关使用请查看"网页源代码"吧，就不别写说明了，麻烦
+<br />
+<style type="text/css">
+.jskey_page_skin_my a    {border:1px solid #ccc;background-color:#dddddd;color:#333333;}
+.jskey_page_skin_my span {color:#ff0000;}
+.jskey_page_skin_my .page{font-weight:700;color:#ffffff;background-color:#ff0000;}
+.jskey_page_skin_my input {background-color:#999999;color:#ffffff;}
+.jskey_page_skin_my button{background-color:#999999;color:#ffffff;}
+.jskey_page_skin_my select{background-color:#999999;color:#ffffff;}
+.jskey_page_skin_my select option {background-color:#ffffff;color:#000000;}
+</style>
+<br /><div id="p"></div>
+<script type="text/javascript">
+$jskey.page({
+	template:"{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}",
+	object:'p',// 放置翻页控件信息的html的DOM的id
+	pagesize:50,// 一页数量，默认为10
+	size:990,// 总数据量
+	page:10, // 当前页
+	skin: 'my', //自定义皮肤，或者逗号分隔颜色两个(背景颜色,文本颜色)，此处演示自定义class，"my"对应".jskey_page_skin_my"
+    first: '<<', //若不显示，设置false即可
+    last: '>>', //<尾页>若不显示，设置false即可
+    prev: '<', //若不显示，设置false即可
+    next: '>', //若不显示，设置false即可
+    go: '确定',// 跳转到指定页面的按钮显示值
+    pagelist:3,// 左右留置的翻页按钮数
+    hide:true,// 当没有相关页面时，是否隐藏首页、上页、下页、尾页
+	fn:function(e){// 回调函数，会在初始化时执行一次，故，可以通过重置size属性，并调用redo()函数重绘翻页导航条
+		// 这里可以重置page和pagesize等属性，注意修改后，自己获取的数据是否还正确喔
+		if(e.size != 10000){e.size = 10000;e.redo();}// redo方法可以更新翻页信息
+		// 下面获取的就已经是最新的信息了
+		$jskey.$('show').innerHTML="page=" + e.page + ",pagesize=" + e.pagesize + ",size=" + e.size + ",lastpage=" + e.totalpage;
+	}
+});
+</script>
+
+<br /><div id="p1"></div>
+<script type="text/javascript">
+var Page = "";
+$jskey.page({
+	template:1,
+	object:'p1',size:990,page:5,
+	skin: '#00AA91,#ffffff', //皮肤
+    fn:fn
+});
+</script>
+
+<br /><div id="p2"></div>
+<script type="text/javascript">
+$jskey.page({
+	template:2,
+	object:'p2',size:990,page:5,
+	fn:fn
+});
+</script>
+
+<br /><div id="p3"></div>
+<script type="text/javascript">
+$jskey.page({
+	template:3,
+	object:'p3',size:990,page:9,
+    fn:fn
+});
+</script>
+
+<br /><div id="p4"></div>
+<script type="text/javascript">
+$jskey.page({
+	template:4,
+	object:'p4',size:87,page:10,
+    fn:fn
+});
+</script>
+
+</body>
+</html>
