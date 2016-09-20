@@ -109,7 +109,7 @@ $jskey.Page.prototype.view_ = function(){
 	else{
 		C.totalpage = Math.ceil(C.size/C.pagesize);
 	}
-	if(C.totalpage <= 0){C.totalpage = 0;}
+	if(C.totalpage <= 0){C.totalpage = 1;}
 	if(C.page > C.totalpage){C.page = C.totalpage};
 	C.pagelist = 'pagelist' in C ? (C.pagelist|0) : 5;
 	
