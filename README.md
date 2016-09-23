@@ -50,4 +50,4 @@ $jskey.page({
 
 
 下面是比较全面的演示及说明，相关使用请点击下面网址，并使用"网页源代码"查看吧，就不另写说明了，麻烦
-* [示例](https://rawgit.com/skeychen/jskey_page/master/jskey_page.html)
+* [示例](https://rawcdn.githack.com/skeychen/jskey_page/master/jskey_page.html)

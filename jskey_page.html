@@ -96,7 +96,7 @@ $jskey.page({
 	fn:function(e){// 回调函数，初始化完成时也会执行一次，故，可以通过重置size属性，并调用redo()函数重绘翻页导航条
 		// 这里可以重置page和pagesize等属性，注意修改后，自己获取的数据是否还正确喔
 		// 例：假设异步返回的res值是:{"size":100, "page":2, "pagesize":10,"totalpage":10, "rows":[{"id":"1"},{"id":"2"},{"id":"3"}]}
-		$.getJSON('https://raw.githack.com/skeychen/jskey_page/master/data.json?page='+e.page+'&pagesize='+e.pagesize+'&r='+new Date(), function(res){
+		$.getJSON('https://rawcdn.githack.com/skeychen/jskey_page/master/data.json?page='+e.page+'&pagesize='+e.pagesize+'&r='+new Date(), function(res){
 			// 1、每次都重置数据，此示例是静态json，估此page和pagesize不设置
 			if(e.size != res.size){// ||e.page != res.page
 				e.size = res.size;// 如果当前控件数据太旧或错误，此处可更新此数据，也可不更新（当后台数据总数变化时可实时更新）
