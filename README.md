@@ -13,7 +13,7 @@ $jskey.page() 纯js实现的翻页导航条，可自定义展示模板。
 <script type="text/javascript">
 $jskey.page({
 	object:'p1',size:990,fn:function(e){
-		// 回调函数fn(e)中e可用变量和函数有：e.*【所有可设置的参数】，e.redo()【函数】
+		// 回调函数中e可用变量和函数有：e.*【所有可设置的参数】，e.totalpage【总页数】，e.redo()【重置函数】
 		alert(e.page);
 	}
 });
@@ -46,12 +46,24 @@ $jskey.page({
 		// 这里可以重置page和pagesize等属性，注意修改后，自己获取的数据是否还正确喔
 		// 例：假设异步返回的res值是:{"size":100, "page":2, "pagesize":10,"totalpage":10, "rows":[{"id":"1"},{"id":"2"},{"id":"3"}]}
 		$.getJSON('./data.json?page='+e.page+'&pagesize='+e.pagesize+'&r='+new Date(), function(res){
-			// 1、每次都重置数据，此示例是静态json，估此page和pagesize不设置
+			// 只有数据变化时才重置数据，此示例是静态json，估此page和pagesize不设置
 			if(e.size != res.size){// ||e.page != res.page
 				e.size = res.size;// 如果当前控件数据太旧或错误，此处可更新此数据，也可不更新（当后台数据总数变化时可实时更新）
 				//e.page = res.page;// 同上，此值为显示的当前页
 				//e.pagesize = res.pagesize;// 同上，此值为整数，且大于0，一般初始化时指定后几乎不会变化
 				e.redo();// 如果更新了控件的数据，则需要执行此函数，用于更新页面内容
+			}
+			// 过程中可以变化样例
+			if(e.page == 10){
+				e.template = 1;
+				e.redo();
+			}
+			else{
+				var s = "{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}";
+				if(e.template != s){
+					e.template = s;
+					e.redo();
+				}
 			}
 			// 此处可以循环res.rows渲染数据表
 			// ...
