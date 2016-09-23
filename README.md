@@ -9,6 +9,10 @@ $jskey.page() 纯js实现的翻页导航条，可自定义展示模板。
 
 使用template可以设置自己的展示模板，如果template直接设置值:1-4可使用默认的四种模板
 
+template中可使用的变量为：
+
+{pageview} {size} {page} {totalpage} {prev} {first} {pagelist} {last} {next} {skip} {go} {pagesize}
+
 各种参数简介如下：
 ```javascript
 $jskey.page({
