@@ -7,6 +7,19 @@ js翻页导航条
 ==============
 $jskey.page() 纯js实现的翻页导航条，可自定义展示模板。
 
+一个简单的例子如下：
+```html
+<div id="p1"></div>
+<script type="text/javascript">
+$jskey.page({
+	object:'p1',size:990,fn:function(e){
+		// 回调函数fn(e)中e可用变量和函数有：e.*【所有可设置的参数】，e.redo()【函数】
+		alert(e.page);
+	}
+});
+</script>
+```
+
 使用template可以设置自己的展示模板，如果template直接设置值:1-4可使用默认的四种模板
 
 template中可使用的变量为：

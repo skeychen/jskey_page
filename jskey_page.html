@@ -17,11 +17,9 @@ var fn = function(e){$jskey.$('show').innerHTML="page=" + e.page + ",pagesize=" 
 <br />
 <br /><div id="p1"></div>
 <script type="text/javascript">
-var Page = "";
 $jskey.page({
 	template:1,
 	object:'p1',size:990,page:5,
-	skin: '#00AA91,#ffffff', //皮肤
     fn:fn
 });
 </script>
@@ -31,6 +29,7 @@ $jskey.page({
 $jskey.page({
 	template:2,
 	object:'p2',size:990,page:5,
+	skin: '#00AA91,#ffffff', //皮肤
 	fn:fn
 });
 </script>
@@ -81,6 +80,7 @@ $jskey.page({
     pagelist:3,// 左右留置的翻页按钮数
     hide:true,// 当没有相关页面时，是否隐藏首页、上页、下页、尾页
 	fn:function(e){// 回调函数，初始化完成时也会执行一次，故，可以通过重置size属性，并调用redo()函数重绘翻页导航条
+		// 回调函数中e可用变量和函数有：e.*【所有可设置的参数】，e.redo()【函数】
 		e.size = 1000;
 		e.redo();
 		fn(e);
@@ -119,3 +119,6 @@ $jskey.page({
 	}
 });
 </script>
+
+</body>
+</html>
