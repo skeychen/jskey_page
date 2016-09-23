@@ -12,6 +12,7 @@ var fn = function(e){$jskey.$('show').innerHTML="page=" + e.page + ",pagesize=" 
 </script>
 点击结果：<span id="show"></span><br />
 <br /><br />使用template可以设置自己的展示模板，如果template直接设置值:1-4可使用默认的四种模板
+<br /><br />template中可使用的变量为：{pageview} {size} {page} {totalpage} {prev} {first} {pagelist} {last} {next} {skip} {go} {pagesize}
 <br /><br />下面是比较全面的演示及说明，相关使用请查看"网页源代码"吧，就不另写说明了，麻烦
 <br />
 <br /><div id="p1"></div>
@@ -66,22 +67,8 @@ $jskey.page({
 <br /><div id="p5"></div>
 <script type="text/javascript">
 $jskey.page({
-	template:2,
-	skin:'my',
-	object:'p5',size:87,page:10,
-    fn:fn
-});
-</script>
-
-
-<br />
-<br />翻页控件不需要依赖jquery，只是为了示例中的ajax效果才引入，此示例需要运行在http环境
-<br /><div id="p6"></div>
-<script src="//cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
-<script type="text/javascript">
-$jskey.page({
 	template:"{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}",
-	object:'p6',// 放置翻页控件信息的html的DOM的id
+	object:'p5',// 放置翻页控件信息的html的DOM的id
 	pagesize:10,// 一页数量，默认为10
 	size:20000,// 总数据量，初始化时可以不设置，默认为0
 	page:1, // 当前页，初始化时可以不设置，默认为1
@@ -94,9 +81,30 @@ $jskey.page({
     pagelist:3,// 左右留置的翻页按钮数
     hide:true,// 当没有相关页面时，是否隐藏首页、上页、下页、尾页
 	fn:function(e){// 回调函数，初始化完成时也会执行一次，故，可以通过重置size属性，并调用redo()函数重绘翻页导航条
+		e.size = 1000;
+		e.redo();
+		fn(e);
+	}
+});
+</script>
+
+
+<br />
+<br />翻页控件不需要依赖jquery，只是为了示例中的ajax效果才引入，以下示例需要运行在http环境
+<br /><div id="p6"></div>
+<script src="../../jquery/jquery.js"></script>
+<script type="text/javascript">
+$jskey.page({
+	template:1,
+	object:'p6',// 放置翻页控件信息的html的DOM的id
+	pagesize:10,// 一页数量，默认为10
+	page:5,
+	size:100,// 总数据量，初始化时可以不设置，默认为0
+    go: '确定',// 跳转到指定页面的按钮显示值
+	fn:function(e){// 回调函数，初始化完成时也会执行一次，故，可以通过重置size属性，并调用redo()函数重绘翻页导航条
 		// 这里可以重置page和pagesize等属性，注意修改后，自己获取的数据是否还正确喔
 		// 例：假设异步返回的res值是:{"size":100, "page":2, "pagesize":10,"totalpage":10, "rows":[{"id":"1"},{"id":"2"},{"id":"3"}]}
-		$.getJSON('./data.json?page='+e.page+'&pagesize='+e.pagesize+'&r='+new Date(), function(res){
+		$.getJSON('./jskey_page_data.json?page='+e.page+'&pagesize='+e.pagesize+'&r='+new Date(), function(res){
 			// 1、每次都重置数据，此示例是静态json，估此page和pagesize不设置
 			if(e.size != res.size){// ||e.page != res.page
 				e.size = res.size;// 如果当前控件数据太旧或错误，此处可更新此数据，也可不更新（当后台数据总数变化时可实时更新）
@@ -111,6 +119,3 @@ $jskey.page({
 	}
 });
 </script>
-
-</body>
-</html>
