@@ -6,7 +6,9 @@ js翻页导航条
 
 ==============
 $jskey.page() 纯js实现的翻页导航条，可自定义展示模板。
+使用template可以设置自己的展示模板，如果template直接设置值:1-4可使用默认的四种模板
 
+各种参数简介如下：
 ```javascript
 $jskey.page({
 	template:"{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}",
@@ -41,4 +43,6 @@ $jskey.page({
 });
 ```
 
+
+下面是比较全面的演示及说明，相关使用请点击下面网址，并使用"网页源代码"查看吧，就不另写说明了，麻烦
 * [示例](https://rawgit.com/skeychen/jskey_page/master/jskey_page.html)
