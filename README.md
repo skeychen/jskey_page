@@ -30,7 +30,7 @@ $jskey.page({
 		// 例：假设异步返回的res值是:{"size":100, "page":2, "pagesize":10,"totalpage":10, "rows":[{"id":"1"},{"id":"2"},{"id":"3"}]}
 		$.getJSON('./data.json?page='+e.page+'&pagesize='+e.pagesize+'&r='+new Date(), function(res){
 			// 1、每次都重置数据，此示例是静态json，估此page和pagesize不设置
-			if(e.size != -1){// ||e.page != res.page
+			if(e.size != res.size){// ||e.page != res.page
 				e.size = res.size;// 如果当前控件数据太旧或错误，此处可更新此数据，也可不更新（当后台数据总数变化时可实时更新）
 				//e.page = res.page;// 同上，此值为显示的当前页
 				//e.pagesize = res.pagesize;// 同上，此值为整数，且大于0，一般初始化时指定后几乎不会变化
