@@ -1,9 +1,9 @@
 /**
  * 翻页控件类
- * @version 2
- * @datetime 2016-01-25 17:44
+ * @version 3
+ * @datetime 2017-08-09 19:06
  * @author skey_chen
- * @copyright 2011-2016 &copy; skey_chen@163.com
+ * @copyright 2011-2017 &copy; skey_chen@163.com
  * @license LGPL
  */
 var $jskey = $jskey || {};
@@ -12,22 +12,19 @@ var $jskey = $jskey || {};
 
 $jskey.on = function($e, et, fn){
 	$e.attachEvent ? 
-		$e.attachEvent('on' + et, function(){fn.call($e, window.event);})
+		$e.attachEvent('on' + et, fn)
 		:
 		$e.addEventListener(et, fn, false);
 	return $jskey;
 };
-$jskey.$ = function(id)
-{
+$jskey.$ = function(id){
 	return document.getElementById(id);
 };
-$jskey.$replace = function(str, t, u)
-{
+$jskey.$replace = function(str, t, u){
 	str = str + "";
 	var i = str.indexOf(t);
 	var r = "";
-	while(i != -1)
-	{
+	while(i != -1){
 		r += str.substring(0, i) + u;// 已经匹配完的部分+替换后的字符串
 		str = str.substring(i + t.length, str.length);// 未匹配的字符串内容
 		i = str.indexOf(t);// 其余部分是否还包含原来的str
@@ -55,7 +52,7 @@ document.write(
 		".jskey_page .page{height:28px;line-height:28px;margin:0 3px 6px 3px;padding:0 10px;width:auto;}" +
 		".jskey_page input, .jskey_page button, .jskey_page select{border:1px solid #ccc;background-color:#ffffff;}" +
 		".jskey_page input {height:24px;line-height:24px;margin:0 5px;padding:0 5px;width:28px;}" +
-		".jskey_page button{height:26px;line-height:26px;margin:0 0px;padding:0 5px;}" +
+		".jskey_page button{height:26px;line-height:26px;margin:0 0px;padding:0 5px;cursor:pointer;}" +
 		".jskey_page select{height:26px;line-height:26px;margin:0 5px;padding:0;width:50px;}" +
 		".jskey_page_skin_default a    {border:1px solid #ccc;background-color:#ffffff;color:#333333;}" +
 		".jskey_page_skin_default span {color:#333333;}" +
@@ -72,7 +69,26 @@ var count = 0;
 $jskey.Page=function(p){
 	this.config = p || {};
 	this.config.i = count++;
+	this.arr = p.arr || [];// 多个翻页实体[{每一个的参数设置全部都可独立存在，但不能设置fn}]
+	this.pageArray = [];
+	var _E = this;
+	var _C = this.config;
 	this.render();
+	for(var j=0; j<this.arr.length; j++){
+		var m = this.arr[j];
+		m.E = _E;
+		m.page = _C.page;
+		m.pagesize = _C.pagesize;
+		m.size = _C.size;
+		m.fn = function(e){
+			e.E.config.page = e.page;
+			e.E.config.pagesize = e.pagesize;
+			e.E.config.size = e.size;
+			e.E.go(e.page);
+			e.E.other();
+		};
+		this.pageArray[j] = new $jskey.Page(m);
+	}
 };
 $jskey.Page.prototype.pageview_ = function(C, v, txt, btn){
 	var s = "",my=/^#/.test(C.skin),x=['#ffffff'];
@@ -87,9 +103,9 @@ $jskey.Page.prototype.pageview_ = function(C, v, txt, btn){
 };
 $jskey.Page.prototype.sizeArray_ = function(){return [5, 10, 15, 20, 25, 30, 50, 100];};
 $jskey.Page.prototype.tempArray_ = [""
-	,"{prev}{pagelist}{next}"
-	,"{prev}{pageview}{next}<span>&nbsp;\u8F6C\u5230\u7B2C</span>{skip}<span>\u9875</span>{go}"
-	,"<span>\u5171{size}\u6761\u8BB0\u5F55&nbsp;\u7B2C{page}/{totalpage}\u9875&nbsp;</span>{first}{prev}{next}{last}<span>&nbsp;\u8F6C\u5230\u7B2C</span>{skip}<span>\u9875</span>{go}<span>&nbsp;\u6BCF\u9875</span>{pagesize}<span>\u6761\u8BB0\u5F55</span>"
+	,"{prev}{pageview}{next}"
+	,"{prev}{pagelist}{next}<span>&nbsp;\u5171{totalpage}\u9875&nbsp;\u5230\u7B2C</span>{skip}<span>\u9875</span>{go}"
+	,"<span>\u5171{size}\u6761&nbsp;\u7B2C{page}/{totalpage}\u9875&nbsp;</span>{first}{prev}{next}{last}<span>&nbsp;\u8F6C\u5230\u7B2C</span>{skip}<span>\u9875</span>{go}<span>&nbsp;\u6BCF\u9875</span>{pagesize}<span>\u6761</span>"
 	,"{prev}{next}"
 ];
 $jskey.Page.prototype.view_ = function(){
@@ -250,6 +266,24 @@ $jskey.Page.prototype.render = function(){
 	if(C.jump){C.fn = C.jump;C.jump = null;}
 	if(!C.redo){C.redo = function(){E.redo();};}
 	C.fn && C.fn(C);
+	E.other();
+};
+
+$jskey.Page.prototype.go = function(page){
+	var E = this, C = E.config;
+	C.page = page;
+	E.render();
+};
+
+$jskey.Page.prototype.other = function(){
+	var E = this, C = E.config;
+	for(var j=0; j<E.pageArray.length; j++){
+		var m = E.pageArray[j];
+		m.config.page = C.page;
+		m.config.pagesize = C.pagesize;
+		m.config.size = C.size;
+		m.redo();
+	}
 };
 
 

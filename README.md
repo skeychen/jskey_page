@@ -12,10 +12,10 @@ $jskey.page() 纯js实现的翻页导航条，可自定义展示模板。
 <div id="p1"></div>
 <script type="text/javascript">
 $jskey.page({
-	object:'p1',size:990,fn:function(e){
-		// 回调函数中e可用变量和函数有：e.*【所有可设置的参数】，e.totalpage【总页数】，e.redo()【重置函数】
-		alert(e.page);
-	}
+    object:'p1',size:990,fn:function(e){
+        // 回调函数中e可用变量和函数有：e.*【所有可设置的参数】，e.totalpage【总页数】，e.redo()【重置函数】
+        alert(e.page);
+    }
 });
 </script>
 ```
@@ -29,12 +29,12 @@ template中可使用的变量为：
 各种参数简介如下：
 ```javascript
 $jskey.page({
-	template:"{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}",
-	object:'p6',// 放置翻页控件信息的html的DOM的id
-	pagesize:10,// 一页数量，默认为10
-	size:20000,// 总数据量，初始化时可以不设置，默认为0
-	page:1, // 当前页，初始化时可以不设置，默认为1
-	skin: 'my', //自定义皮肤css名称后缀，或者也可以直接逗号分隔颜色两个(背景颜色,文本颜色):'#00AA91,#ffffff'
+    template:"{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}",
+    object:'p6',// 放置翻页控件信息的html的DOM的id
+    pagesize:10,// 一页数量，默认为10
+    size:20000,// 总数据量，初始化时可以不设置，默认为0
+    page:1, // 当前页，初始化时可以不设置，默认为1
+    skin: 'my', //自定义皮肤css名称后缀，或者也可以直接逗号分隔颜色两个(背景颜色,文本颜色):'#00AA91,#ffffff'
     first: '<<', //若不显示，设置false即可
     last: '>>', //<尾页>若不显示，设置false即可
     prev: '<', //若不显示，设置false即可
@@ -42,34 +42,38 @@ $jskey.page({
     go: '确定',// 跳转到指定页面的按钮显示值
     pagelist:3,// 左右留置的翻页按钮数
     hide:true,// 当没有相关页面时，是否隐藏首页、上页、下页、尾页
-	fn:function(e){// 回调函数，初始化完成时也会执行一次，故，可以通过重置size属性，并调用redo()函数重绘翻页导航条
-		// 这里可以重置page和pagesize等属性，注意修改后，自己获取的数据是否还正确喔
-		// 例：假设异步返回的res值是:{"size":100, "page":2, "pagesize":10,"totalpage":10, "rows":[{"id":"1"},{"id":"2"},{"id":"3"}]}
-		$.getJSON('./data.json?page='+e.page+'&pagesize='+e.pagesize+'&r='+new Date(), function(res){
-			// 只有数据变化时才重置数据，此示例是静态json，估此page和pagesize不设置
-			if(e.size != res.size){// ||e.page != res.page
-				e.size = res.size;// 如果当前控件数据太旧或错误，此处可更新此数据，也可不更新（当后台数据总数变化时可实时更新）
-				//e.page = res.page;// 同上，此值为显示的当前页
-				//e.pagesize = res.pagesize;// 同上，此值为整数，且大于0，一般初始化时指定后几乎不会变化
-				e.redo();// 如果更新了控件的数据，则需要执行此函数，用于更新页面内容
-			}
-			// 过程中可以变化样例
-			if(e.page == 10){
-				e.template = 1;
-				e.redo();
-			}
-			else{
-				var s = "{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}";
-				if(e.template != s){
-					e.template = s;
-					e.redo();
-				}
-			}
-			// 此处可以循环res.rows渲染数据表
-			// ...
-			fn(e);
-		});
-	}
+    arr:[
+        {object:'p7',template:2},// 这里的每一个对象可设置参数都和主翻页控件参数一样，当然page、pagesize、size和fn不可设置
+        {object:'p8',template:3}
+    ],// 此处可以设置多个关系翻页控件，同步翻页信息
+    fn:function(e){// 回调函数，初始化完成时也会执行一次，故，可以通过重置size属性，并调用redo()函数重绘翻页导航条
+        // 这里可以重置page和pagesize等属性，注意修改后，自己获取的数据是否还正确喔
+        // 例：假设异步返回的res值是:{"size":100, "page":2, "pagesize":10,"totalpage":10, "rows":[{"id":"1"},{"id":"2"},{"id":"3"}]}
+        $.getJSON('./data.json?page='+e.page+'&pagesize='+e.pagesize+'&r='+new Date(), function(res){
+            // 只有数据变化时才重置数据，此示例是静态json，估此page和pagesize不设置
+            if(e.size != res.size){// ||e.page != res.page
+                e.size = res.size;// 如果当前控件数据太旧或错误，此处可更新此数据，也可不更新（当后台数据总数变化时可实时更新）
+                //e.page = res.page;// 同上，此值为显示的当前页
+                //e.pagesize = res.pagesize;// 同上，此值为整数，且大于0，一般初始化时指定后几乎不会变化
+                e.redo();// 如果更新了控件的数据，则需要执行此函数，用于更新页面内容
+            }
+            // 过程中可以变化样例
+            if(e.page == 10){
+                e.template = 1;
+                e.redo();
+            }
+            else{
+                var s = "{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}";
+                if(e.template != s){
+                    e.template = s;
+                    e.redo();
+                }
+            }
+            // 此处可以循环res.rows渲染数据表
+            // ...
+            fn(e);
+        });
+    }
 });
 ```
 

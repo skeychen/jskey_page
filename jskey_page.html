@@ -66,7 +66,7 @@ $jskey.page({
 <br /><div id="p5"></div>
 <script type="text/javascript">
 $jskey.page({
-	template:"{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}",
+	template:"{pageview}<span>共{size}条&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}条",
 	object:'p5',// 放置翻页控件信息的html的DOM的id
 	pagesize:10,// 一页数量，默认为10
 	size:20000,// 总数据量，初始化时可以不设置，默认为0
@@ -90,7 +90,7 @@ $jskey.page({
 			e.redo();
 		}
 		else{
-			var s = "{pageview}<span>共{size}条记录&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}";
+			var s = "{pageview}<span>共{size}条&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}条";
 			if(e.template != s){
 				e.template = s;
 				e.redo();
@@ -102,10 +102,11 @@ $jskey.page({
 </script>
 
 
+<div style="background-color:#999;">
 <br />
-<br />翻页控件不需要依赖jquery，只是为了示例中的ajax效果才引入，以下示例需要运行在http环境
+<br />翻页控件不需要依赖jquery，只是为了示例中的ajax效果才引入，这个示例需要运行在http环境
 <br /><div id="p6"></div>
-<script src="//cdn.bootcss.com/jquery/1.12.3/jquery.min.js"></script>
+<script src="../../jquery/jquery.js"></script>
 <script type="text/javascript">
 $jskey.page({
 	template:1,
@@ -144,6 +145,29 @@ $jskey.page({
 	}
 });
 </script>
+</div>
 
+<br />
+<div style="background-color:#999;">
+<br />新增的复杂用法，即多个翻页，共用同一个翻页信息
+<br /><div id="p7"></div>
+<br /><div id="p8"></div>
+<br /><div id="p9"></div>
+<br /><div id="p10"></div>
+<script type="text/javascript">
+var mypageobj = $jskey.page({
+	template:"{pageview}<span>共{size}条&nbsp;第{page}/{totalpage}页&nbsp;</span>",
+	object:'p7',size:987,page:10,
+	arr:[
+		{template:3,object:'p8'},
+		{template:2,object:'p9'},
+		{template:1,object:'p10'}
+	],
+    fn:fn
+});
+</script>
+<br />外部按钮执行跳转事件<input type="button" value="我们去第5页溜溜" onclick="mypageobj.go(5);"/>
+<br /><br />
+</div>
 </body>
 </html>
