@@ -73,7 +73,14 @@ $jskey.Page=function(p){
 	this.pageArray = [];
 	var _E = this;
 	var _C = this.config;
-	this.render();
+	if(_C.jump){_C.fn = _C.jump;_C.jump = null;}
+	if(!_C.redo){_C.redo = function(){_E.redo();};}
+	if(_C.noexecute){
+		this.redo();
+	}
+	else{
+		this.render();
+	}
 	for(var j=0; j<this.arr.length; j++){
 		var m = this.arr[j];
 		m.E = _E;
@@ -87,6 +94,7 @@ $jskey.Page=function(p){
 			e.E.go(e.page);
 			e.E.other();
 		};
+		m.noexecute = true;
 		this.pageArray[j] = new $jskey.Page(m);
 	}
 };
@@ -270,8 +278,6 @@ $jskey.Page.prototype.redo = function(){
 $jskey.Page.prototype.render = function(){
 	var E = this, C = E.config;
 	E._redo();
-	if(C.jump){C.fn = C.jump;C.jump = null;}
-	if(!C.redo){C.redo = function(){E.redo();};}
 	C.fn && C.fn(C);
 	E.other();
 };
