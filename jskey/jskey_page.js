@@ -1,9 +1,9 @@
 /**
  * 翻页控件类
- * @version 3
- * @datetime 2017-10-27 23:43
+ * @version 4
+ * @datetime 2018-06-27 14:30
  * @author skey_chen
- * @copyright 2011-2017 &copy; skey_chen@163.com
+ * @copyright 2011-2018 &copy; skey_chen@163.com
  * @license LGPL
  */
 var $jskey = $jskey || {};
