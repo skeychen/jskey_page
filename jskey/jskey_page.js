@@ -1,9 +1,9 @@
 /**
  * 翻页控件类
- * @version 4
- * @datetime 2018-06-27 14:30
+ * @version 5
+ * @datetime 2019-08-29 14:30
  * @author skey_chen
- * @copyright 2011-2018 &copy; skey_chen@163.com
+ * @copyright 2011-2019 &copy; skey_chen@163.com
  * @license LGPL
  */
 var $jskey = $jskey || {};
@@ -49,14 +49,14 @@ document.write(
 		".jskey_page *{display:inline-block;vertical-align:top;font-size:12px;color:#333333;width:auto;}" +
 		".jskey_page a,.jskey_page span{height:26px;line-height:26px;border-radius:2px;}" +
 		".jskey_page a{margin:0 3px 6px 3px;padding:0 10px;cursor:pointer;text-decoration:none;}" +
-		".jskey_page .page{height:28px;line-height:28px;margin:0 3px 6px 3px;padding:0 10px;width:auto;}" +
+		".jskey_page .selected{height:28px;line-height:28px;margin:0 3px 6px 3px;padding:0 10px;width:auto;}" +
 		".jskey_page input, .jskey_page button, .jskey_page select{border:1px solid #ccc;background-color:#ffffff;}" +
 		".jskey_page input {height:24px;line-height:24px;margin:0 5px;padding:0 5px;width:28px;}" +
 		".jskey_page button{height:26px;line-height:26px;margin:0 0px;padding:0 5px;cursor:pointer;}" +
 		".jskey_page select{height:26px;line-height:26px;margin:0 5px;padding:0;width:50px;}" +
 		".jskey_page_skin_default a    {border:1px solid #ccc;background-color:#ffffff;color:#333333;}" +
 		".jskey_page_skin_default span {color:#333333;}" +
-		".jskey_page_skin_default .page{font-weight:700;color:#000000;background-color:#ffffff;}" + 
+		".jskey_page_skin_default .selected{font-weight:700;color:#000000;background-color:#ffffff;}" + 
 	"</style>"
 );
 
@@ -103,14 +103,14 @@ $jskey.Page.prototype.pageview_ = function(C, v, txt, btn){
 	if(my){x=C.skin.split(",");}
 	if(x.length<2){x[1]='#000000';}
 	if(C.page === v && !btn){
-		s = '<span class="page" '+ (my ? 'style="background-color:'+ x[0] + ';color:' + x[1] + ';"' : '') +'>'+ txt +'</span>';
+		s = '<span class="selected" '+ (my ? 'style="background-color:'+ x[0] + ';color:' + x[1] + ';"' : '') +'>'+ txt +'</span>';
 	} else {
 		s = '<a data-jskeypage="'+ v +'">'+ txt +'</a>';
 	}
 	return s;
 };
 $jskey.Page.prototype.sizeArray_ = function(){return [5, 10, 15, 20, 25, 30, 50, 100];};
-$jskey.Page.prototype.tempArray_ = [""
+$jskey.Page.prototype.tempArray_ = ["{prev}{pagelist}{next}"
 	,"{prev}{pageview}{next}"
 	,"{prev}{pagelist}{next}<span>&nbsp;\u5171{totalpage}\u9875&nbsp;\u5230\u7B2C</span>{skip}<span>\u9875</span>{go}"
 	,"<span>\u5171{size}\u6761&nbsp;\u7B2C{page}/{totalpage}\u9875&nbsp;</span>{first}{prev}{next}{last}<span>&nbsp;\u8F6C\u5230\u7B2C</span>{skip}<span>\u9875</span>{go}<span>&nbsp;\u6BCF\u9875</span>{pagesize}<span>\u6761</span>"
@@ -142,8 +142,8 @@ $jskey.Page.prototype.view_ = function(){
 	for(var i = 0; i < V.txt.length; i++){
 		V.txt[i] = V.tmp[i] in C ? C[V.tmp[i]] : V.txt[i];
 	}
-	H = 'template' in C ? C.template : E.tempArray_[3];
-	if(H > 0 && H < E.tempArray_.length){
+	H = 'template' in C ? C.template : E.tempArray_[0];
+	if(H >= 0 && H < E.tempArray_.length){
 		H = E.tempArray_[H];
 	}
 	V.t = C.size;
