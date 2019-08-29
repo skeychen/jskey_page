@@ -5,87 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0,minimal-ui"/>
 <title>jskey_pape</title>
 <script type="text/javascript" src="./jskey/jskey_page.js"></script>
+<style type="text/css">
+body{line-height:25px;}
+div::-webkit-scrollbar {width:8px;height:0px;}
+div::-webkit-scrollbar-thumb {background-color:#95B8E7;}
+div::-webkit-scrollbar-track {background-color:#eeeeee;opacity:0.1;}
+</style>
 </head>
 <body>
 <script type="text/javascript">
-var fn = function(e){$jskey.$('show').innerHTML=$jskey.$('show').innerHTML + "<br />" + "name=" + e.object + ",page=" + e.page + ",pagesize=" + e.pagesize + ",size=" + e.size + ",lastpage=" + e.totalpage;}
+var fn = function(e){$jskey.$('show').innerHTML="name=" + e.target + ",page=" + e.page + ",pagesize=" + e.pagesize + ",size=" + e.size + ",lastpage=" + e.totalpage + "<br />" + $jskey.$('show').innerHTML;}
 </script>
-点击结果：<span id="show"></span><br />
-<br /><br />使用template可以设置自己的展示模板，如果template直接设置值:0-4可使用默认的五种模板，不设置则为默认0
-<br /><br />template中可使用的变量为：{pageview} {size} {page} {totalpage} {prev} {first} {pagelist} {last} {next} {skip} {go} {pagesize}
-<br /><br />下面是比较全面的演示及说明，相关使用请查看"网页源代码"吧，就不另写说明了，麻烦
+下面是比较全面的演示及说明，相关使用请查看"网页源代码"吧，就不另写说明了，麻烦
 <br />
-<br /><div id="p0"></div>
-<script type="text/javascript">
-$jskey.page({
-	object:'p0',size:990,page:5,
-    fn:fn
-});
-</script>
-<br /><div id="p1"></div>
-<script type="text/javascript">
-$jskey.page({
-	template:1,
-	object:'p1',size:990,page:5,
-    fn:fn
-});
-</script>
-
-<br /><div id="p2"></div>
-<script type="text/javascript">
-$jskey.page({
-	template:2,
-	object:'p2',size:990,page:5,
-	skin: '#00AA91,#ffffff', //皮肤
-	fn:fn
-});
-</script>
-
-<br /><div id="p3"></div>
-<script type="text/javascript">
-$jskey.page({
-	template:3,
-	object:'p3',size:990,page:9,
-    fn:fn
-});
-</script>
-
-<br /><div id="p4"></div>
-<script type="text/javascript">
-$jskey.page({
-	template:4,
-	object:'p4',size:87,page:10,
-    fn:fn
-});
-</script>
+<div style="background-color:#f3f3f3;padding:10px;margin:10px 0 0 0;">
+使用template可以设置自己的展示模板，如果template直接设置值:0-4可使用默认的五种模板，不设置则为默认0
+<div id="p0"></div><script type="text/javascript">$jskey.page({target:'p0',size:990,page:24,fn:fn});</script>
+<div id="p1"></div><script type="text/javascript">$jskey.page({target:'p1',size:990,page:39,fn:fn,template:1});</script>
+<div id="p2"></div><script type="text/javascript">$jskey.page({target:'p2',size:990,page:47,fn:fn,template:2});</script>
+<div id="p3"></div><script type="text/javascript">$jskey.page({target:'p3',size:990,page: 1,fn:fn,template:3});</script>
+<div id="p4"></div><script type="text/javascript">$jskey.page({target:'p4',size:990,page: 1,fn:fn,template:4});</script>
+</div>
 
 
 <style type="text/css">
-.jskey_page_skin_my a    {border:1px solid #ccc;background-color:#dddddd;color:#333333;}
-.jskey_page_skin_my span {color:#ff0000;}
-.jskey_page_skin_my .selected{font-weight:700;color:#ffffff;background-color:#ff0000;}
-.jskey_page_skin_my input {background-color:#999999;color:#ffffff;}
-.jskey_page_skin_my button{background-color:#999999;color:#ffffff;}
-.jskey_page_skin_my select{background-color:#999999;color:#ffffff;}
-.jskey_page_skin_my select option {background-color:#ffffff;color:#000000;}
+.my a {border:1px solid #ddd;color:#333333;}
+.my a.select:hover {background-color:rgba(238, 136, 51, .1);border-color: rgba(238, 136, 51, .2);color:#e83;}
+.my a.selected{font-weight:700;color:#fff;background-color:#e83}
+.my a.disabled{}/*仅在hide为true时有用*/
+.my input {background-color:#fff;color:#000;}
+.my button{background-color:#fff;color:#000;}
+.my select{background-color:#fff;color:#000;}
+.my select option {background-color:#fff;color:#000000;}
 </style>
-
-<br /><div id="p5"></div>
+<div style="background-color:#e0ecff;padding:10px;margin:10px 0 0 0;">
+自定义组合，template中可使用的变量为：{pageview} {size} {page} {totalpage} {prev} {first} {pagelist} {last} {next} {skip} {go} {pagesize}
+<div id="p5"></div>
 <script type="text/javascript">
 $jskey.page({
 	template:"{pageview}<span>共{size}条&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}条",
-	object:'p5',// 放置翻页控件信息的html的DOM的id
+	target:'p5',// 放置翻页控件信息的html的DOM的id
 	pagesize:10,// 一页数量，默认为10
 	size:20000,// 总数据量，初始化时可以不设置，默认为0
 	page:1, // 当前页，初始化时可以不设置，默认为1
-	skin: 'my', //自定义皮肤css名称后缀，或者也可以直接逗号分隔颜色两个(背景颜色,文本颜色):'#00AA91,#ffffff'
-    first: '<<', //若不显示，设置false即可
-    last: '>>', //<尾页>若不显示，设置false即可
+    first: '第一页', //若不显示，设置false即可
+    last: '最未页', //<尾页>若不显示，设置false即可
     prev: '<', //若不显示，设置false即可
     next: '>', //若不显示，设置false即可
     go: '确定',// 跳转到指定页面的按钮显示值
     pagelist:3,// 左右留置的翻页按钮数
-    hide:true,// 当没有相关页面时，是否隐藏首页、上页、下页、尾页
+    hide:false,// 当没有相关页面时，是否隐藏首页、上页、下页、尾页
+    dom:{
+    	"tag":"div", 
+    	"style":{"className":"jskey_page my"},
+    	"item":{
+    		"tag":"a", 
+    		"begin":"", 
+    		"end":"", 
+    		"style":{
+    			"className":"select", 
+    			"selected":"selected", 
+    			"disabled":"disabled"
+    		}
+    	}
+    },
+    
 	fn:function(e){// 回调函数，初始化完成时也会执行一次，故，可以通过重置size属性，并调用redo()函数重绘翻页导航条
 		// 回调函数中e可用变量和函数有：e.*【所有可设置的参数】，e.totalpage【总页数】，e.redo()【重置函数】
 		e.size = 1000;
@@ -104,17 +88,15 @@ $jskey.page({
 	}
 });
 </script>
+</div>
 
-
-<div style="background-color:#999;">
-<br />
-<br />翻页控件不需要依赖jquery，只是为了示例中的ajax效果才引入，这个示例需要运行在http环境
-<br /><div id="p6"></div>
+<div style="background-color:#f3f3f3;padding:10px;margin:10px 0 0 0;">
+翻页控件不需要依赖jquery，只是为了示例中的ajax效果才引入，这个示例需要运行在http环境
+<div id="p6"></div>
 <script src="../../jquery/jquery.js"></script>
 <script type="text/javascript">
 $jskey.page({
-	template:1,
-	object:'p6',// 放置翻页控件信息的html的DOM的id
+	target:'p6',// 放置翻页控件信息的html的DOM的id
 	pagesize:10,// 一页数量，默认为10
 	page:5,
 	size:100,// 总数据量，初始化时可以不设置，默认为0
@@ -151,30 +133,34 @@ $jskey.page({
 </script>
 </div>
 
-<br />
-<div style="background-color:#999;">
-<br />新增的复杂用法，即多个翻页，共用同一个翻页信息
-<br /><div id="p7"></div>
-<br /><div id="p8"></div>
-<br /><div id="p9"></div>
-<br /><div id="p10"></div>
-<br /><div id="p11"></div>
+<script type="text/javascript">
+$jskey.$('show').innerHTML="";// 清空一次
+</script>
+<div style="background-color:#e0ecff;padding:10px;margin:10px 0 0 0;">
+新增的复杂用法，即多个翻页，共用同一个翻页信息
+<div id="p7"></div>
+<div id="p8"></div>
+<div id="p9"></div>
+<div id="p10"></div>
+<div id="p11"></div>
 <script type="text/javascript">
 var mypageobj = $jskey.page({
 	template:"{pageview}<span>共{size}条&nbsp;第{page}/{totalpage}页&nbsp;</span>",
-	object:'p7',size:987,page:10,
+	target:'p7',size:987,page:10,
 	arr:[
-		{template:3,object:'p8'},
-		{template:2,object:'p9'},
-		{template:1,object:'p10'},
-		{template:0,object:'p11'}
+		{template:3,target:'p8',dom:{"style":{"className":"jskey_page my"}}},
+		{template:2,target:'p9',dom:{"style":{"className":"jskey_page my"}}},
+		{template:1,target:'p10',dom:{"style":{"className":"jskey_page my"}}},
+		{template:0,target:'p11',dom:{"style":{"className":"jskey_page my"}}}
 	],
+	dom:{"style":{"className":"jskey_page my"}},
     fn:fn
 });
 // $jskey.$('show').innerHTML="";
 </script>
-<br />外部按钮执行跳转事件<input type="button" value="我们去第5页溜溜" onclick="mypageobj.go(5);"/>
-<br /><br />
+外部按钮执行跳转事件<input type="button" value="我们去第5页溜溜" onclick="mypageobj.go(5);"/>
 </div>
+
+点击结果，倒序显示：<div id="show" style="width:100%;height:400px;overflow:scroll;"></div>
 </body>
 </html>

@@ -1,12 +1,26 @@
 /**
  * 翻页控件类
  * @version 5
- * @datetime 2019-08-29 14:30
+ * @datetime 2019-08-29 18:04
  * @author skey_chen
  * @copyright 2011-2019 &copy; skey_chen@163.com
  * @license LGPL
  */
 var $jskey = $jskey || {};
+
+
+
+$jskey.extend = function(d, s){
+	for(var p in s) {
+		if(typeof s[p] == 'object'){
+			d[p] = d[p] || {};
+			$jskey.extend(d[p], s[p]);
+		}else{
+			d[p] = d[p]||s[p];
+		}
+	}
+	return d;
+};
 
 
 
@@ -44,24 +58,71 @@ $jskey.$replace = function(str, t, u){
 
 
 document.write(
-	"<style type='text/css'>" + 
+	"<style type='text/css'>" +
 		".jskey_page{font-size:0;clear:both;}" +
 		".jskey_page *{display:inline-block;vertical-align:top;font-size:12px;color:#333333;width:auto;}" +
-		".jskey_page a,.jskey_page span{height:26px;line-height:26px;border-radius:2px;}" +
-		".jskey_page a{margin:0 3px 6px 3px;padding:0 10px;cursor:pointer;text-decoration:none;}" +
-		".jskey_page .selected{height:28px;line-height:28px;margin:0 3px 6px 3px;padding:0 10px;width:auto;}" +
+		".jskey_page a," +
+		".jskey_page span{height:26px;line-height:26px;border-radius:2px;margin:0 3px 6px 3px;}" +
+		".jskey_page a{padding:0 10px;width:auto;text-decoration:none;}" +
+		".jskey_page a         {cursor:pointer;background-color:#ffffff;color:#333333;border:1px solid #ccc;}" +
+		".jskey_page a.selected{cursor:default;background-color:#ffffff;color:#000000;border:none;padding:0 11px;height:28px;line-height:28px;font-weight:700;}" +
+		".jskey_page a.disabled{cursor:not-allowed!important;pointer-events:none;opacity:0.5;}" +
 		".jskey_page input, .jskey_page button, .jskey_page select{border:1px solid #ccc;background-color:#ffffff;}" +
 		".jskey_page input {height:24px;line-height:24px;margin:0 5px;padding:0 5px;width:28px;}" +
 		".jskey_page button{height:26px;line-height:26px;margin:0 0px;padding:0 5px;cursor:pointer;}" +
 		".jskey_page select{height:26px;line-height:26px;margin:0 5px;padding:0;width:50px;}" +
-		".jskey_page_skin_default a    {border:1px solid #ccc;background-color:#ffffff;color:#333333;}" +
-		".jskey_page_skin_default span {color:#333333;}" +
-		".jskey_page_skin_default .selected{font-weight:700;color:#000000;background-color:#ffffff;}" + 
 	"</style>"
 );
 
 
 
+/*
+$jskey.page({
+	template:"{pageview}<span>共{size}条&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}条",
+	target:'p',// 放置翻页控件信息的html的DOM的id
+	pagesize:10,// 一页数量，默认为10
+	size:20000,// 总数据量，初始化时可以不设置，默认为0
+	page:1, // 当前页，初始化时可以不设置，默认为1
+    first: '<<', //若不显示，设置false即可
+    last: '>>', //<尾页>若不显示，设置false即可
+    prev: '<', //若不显示，设置false即可
+    next: '>', //若不显示，设置false即可
+    go: '确定',// 跳转到指定页面的按钮显示值
+    pagelist:3,// 左右留置的翻页按钮数
+    hide:true,// 当没有相关页面时，是否隐藏首页、上页、下页、尾页
+    dom:{
+    	"tag":"div", 
+    	"style":{"className":"jskey_page"},
+    	"item":{
+    		"tag":"a", 
+    		"begin":"", 
+    		"end":"", 
+    		"style":{
+    			"className":"", 
+    			"selected":"selected", 
+    			"disabled":"disabled"
+    		}
+    	}
+    },
+    
+	fn:function(e){// 回调函数，初始化完成时也会执行一次，故，可以通过重置size属性，并调用redo()函数重绘翻页导航条
+		// 回调函数中e可用变量和函数有：e.*【所有可设置的参数】，e.totalpage【总页数】，e.redo()【重置函数】
+		e.size = 1000;
+		// 过程中可以变化样例
+		if(e.page == 10){
+			e.template = 0;
+		}
+		else{
+			var s = "{pageview}<span>共{size}条&nbsp;第{page}/{totalpage}页&nbsp;</span>{prev}{first}{pagelist}{last}{next}<span>&nbsp;转到第</span>{skip}<span>页</span>{go}<span>&nbsp;每页</span>{pagesize}条";
+			if(e.template != s){
+				e.template = s;
+			}
+		}
+		e.redo();
+		fn(e);
+	}
+});
+*/
 var count = 0;
 
 
@@ -72,6 +133,7 @@ $jskey.Page=function(p){
 	this.arr = p.arr || [];// 多个翻页实体[{每一个的参数设置全部都可独立存在，但不能设置fn}]
 	this.pageArray = [];
 	var _E = this;
+	_E.config_();
 	var _C = this.config;
 	if(_C.jump){_C.fn = _C.jump;_C.jump = null;}
 	if(!_C.redo){_C.redo = function(){_E.redo();};}
@@ -98,14 +160,25 @@ $jskey.Page=function(p){
 		this.pageArray[j] = new $jskey.Page(m);
 	}
 };
+$jskey.Page.prototype.config_ = function(){
+	var C = this.config;
+	var d = {tag:"div", style:{className:"jskey_page"}, item:{tag:"a", begin:"", end:"", style:{className:"", selected:"selected", disabled:"disabled"}}};
+	C.dom = C.dom||{};
+	$jskey.extend(C.dom, d);
+	C.dom.tag = C.dom.tag.toLowerCase();
+	C.dom.item.tag = C.dom.item.tag.toLowerCase();
+};
 $jskey.Page.prototype.pageview_ = function(C, v, txt, btn){
-	var s = "",my=/^#/.test(C.skin),x=['#ffffff'];
-	if(my){x=C.skin.split(",");}
-	if(x.length<2){x[1]='#000000';}
-	if(C.page === v && !btn){
-		s = '<span class="selected" '+ (my ? 'style="background-color:'+ x[0] + ';color:' + x[1] + ';"' : '') +'>'+ txt +'</span>';
+	var s = "",i = C.dom.item;
+	if(C.page === v){
+		if(btn){
+			s = '<' + i.tag + (i.style.disabled.length > 0 ? ' class="'+i.style.disabled+'"' : '') + '>' + i.begin + txt + i.end + '</' + i.tag + '>';
+		}
+		else{
+			s = '<' + i.tag + (i.style.selected.length > 0 ? ' class="'+i.style.selected+'"' : '') + '>' + i.begin + txt + i.end + '</' + i.tag + '>';
+		}
 	} else {
-		s = '<a data-jskeypage="'+ v +'">'+ txt +'</a>';
+		s = '<' + i.tag + (i.style.className.length > 0 ? ' class="'+i.style.className+'"' : '') + (' data-jskeypage="'+v+'"') + '>' + i.begin + txt + i.end + '</' + i.tag + '>';
 	}
 	return s;
 };
@@ -122,7 +195,6 @@ $jskey.Page.prototype.view_ = function(){
 	C.hide = (C.hide||false) == true;
 	C.page = (C.page|0) || 1;
 	C.pagesize = C.pagesize|0;// 每页数量
-	C.skin = C.skin||'';
 	if(C.pagesize <= 0){C.pagesize = 10;}
 	C.size = (C.total||C.count||C.size||-1)|0;
 	C.total = C.count = null;
@@ -221,7 +293,7 @@ $jskey.Page.prototype.view_ = function(){
 		H = R(H, "{pagelist}", "");
 		H = R(H, "{pageview}", "");
 	}
-	return '<div class="jskey_page jskey_page_skin_'+ (C.skin ? (/^#/.test(C.skin) ? 'default' : C.skin) : 'default') +'" id="jskey_page_'+ C.i +'">'+ H +'</div>';
+	return '<'+C.dom.tag+' onselectstart="return false;" class="'+C.dom.style.className+'" id="jskey_page_'+ C.i +'">'+ H +'</'+C.dom.tag+'>';
 };
 //切换
 $jskey.Page.prototype.jump = function(elem){
@@ -230,8 +302,8 @@ $jskey.Page.prototype.jump = function(elem){
 	var btn = elem.getElementsByTagName('button')[0];
 	var input = elem.getElementsByTagName('input')[0];
 	for(var i = 0, len = childs.length; i < len; i++){
-		if(childs[i].nodeName.toLowerCase() === 'a'){
-			$jskey.on(childs[i], 'click', function(){
+		if(childs[i].nodeName.toLowerCase() === C.dom.item.tag){
+			$jskey.on(childs[i], 'click', function(event){
 				var page = this.getAttribute('data-jskeypage')|0;
 				C.page = page;
 				EE.render();
@@ -251,7 +323,7 @@ $jskey.Page.prototype.jump = function(elem){
 		$jskey.on(sel, 'change', function(){
 			C.pagesize = sel.value;
 			EE.render();
-		});
+		}) 	;
 	}
 };
 
@@ -259,7 +331,7 @@ $jskey.Page.prototype.jump = function(elem){
 $jskey.Page.prototype._redo = function(){
 	var E = this, C = E.config;
 	var H = E.view_();
-	C.o = C.object || C.cont;
+	C.o = C.target || C.object || C.cont;
 	switch(typeof C.o === 'object' ? (C.o.length === undefined ? 2 : 3) : 1){
 		case 2:C.o.innerHTML = H;break;
 		case 3:C.o.html(H);break;
